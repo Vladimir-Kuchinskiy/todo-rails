@@ -1,9 +1,17 @@
 FROM ruby:alpine
 
-RUN apk add --update build-base postgresql-dev tzdata
+RUN apk update \
+  && apk add --virtual build-dependencies \
+  gcc \
+  wget \
+  git \
+  && apk add \
+  build-base postgresql-dev tzdata \
+  bash
+
 RUN gem install rails
 
 WORKDIR /app
 COPY Gemfile* ./
 RUN bundle install
-COPY . .
+COPY . ./app/
