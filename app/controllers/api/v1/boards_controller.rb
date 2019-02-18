@@ -7,19 +7,18 @@ module Api
 
       # GET /boards
       def index
-        @boards = Board.all
-        json_response(@boards)
+        json_response(BoardSerializer.new(Board.all))
       end
 
       # POST /boards
       def create
         @board = Board.create!(board_params)
-        json_response(@board, :created)
+        json_response(BoardSerializer.new(@board), :created)
       end
 
       # GET /boards/:id
       def show
-        json_response(@board)
+        json_response(BoardSerializer.new(@board, include: %i[lists lists.cards]))
       end
 
       # PUT /boards/:id

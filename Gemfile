@@ -13,6 +13,8 @@ gem 'rack-cors'
 
 gem 'dotenv-rails'
 
+gem 'fast_jsonapi'
+
 group :development, :test do
   gem 'rspec-rails'
   gem 'pry-rails'

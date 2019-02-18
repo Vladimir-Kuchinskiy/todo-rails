@@ -10,8 +10,8 @@ RSpec.describe 'Boards API', type: :request do
     before { get '/api/v1/boards' }
 
     it 'returns boards' do
-      expect(json).not_to be_empty
-      expect(json.size).to eq(10)
+      expect(json['data']).not_to be_empty
+      expect(json['data'].size).to eq(10)
     end
 
     it 'returns status code 200' do
@@ -25,7 +25,7 @@ RSpec.describe 'Boards API', type: :request do
     context 'when the record exists' do
       it 'returns the board' do
         expect(json).not_to be_empty
-        expect(json['id']).to eq(board_id)
+        expect(json['data']['id'].to_i).to eq(board_id)
       end
 
       it 'returns status code 200' do
@@ -34,7 +34,7 @@ RSpec.describe 'Boards API', type: :request do
     end
 
     context 'when the record does not exist' do
-      let(:board_id) { 100 }
+      let(:board_id) { 0 }
 
       it 'returns status code 404' do
         expect(response).to have_http_status(404)
@@ -54,7 +54,7 @@ RSpec.describe 'Boards API', type: :request do
       end
 
       it 'creates a board' do
-        expect(json['title']).to eq('Learn Elm')
+        expect(json['data']['attributes']['title']).to eq('Learn Elm')
       end
 
       it 'returns status code 201' do

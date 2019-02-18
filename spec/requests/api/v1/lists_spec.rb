@@ -17,7 +17,7 @@ RSpec.describe 'lists API' do
       end
 
       it 'returns all board lists' do
-        expect(json.size).to eq(20)
+        expect(json['data'].size).to eq(20)
       end
     end
 
@@ -34,8 +34,8 @@ RSpec.describe 'lists API' do
     end
   end
 
-  describe 'GET /api/v1/boards/:board_id/lists/:id' do
-    before { get "/api/v1/boards/#{board_id}/lists/#{id}" }
+  describe 'GET /api/v1/lists/:id' do
+    before { get "/api/v1/lists/#{id}" }
 
     context 'when board list exists' do
       it 'returns status code 200' do
@@ -43,7 +43,7 @@ RSpec.describe 'lists API' do
       end
 
       it 'returns the list' do
-        expect(json['id']).to eq(id)
+        expect(json['data']['id'].to_i).to eq(id)
       end
     end
 
@@ -63,7 +63,7 @@ RSpec.describe 'lists API' do
   describe 'POST /api/v1/boards/:board_id/lists' do
     context 'when request attributes are valid' do
       before do
-        valid_attributes = { title: 'Visit Narnia', done: false }
+        valid_attributes = { title: 'Visit Narnia' }
         post "/api/v1/boards/#{board_id}/lists", params: valid_attributes
       end
 
@@ -85,10 +85,10 @@ RSpec.describe 'lists API' do
     end
   end
 
-  describe 'PUT /api/v1/boards/:board_id/lists/:id' do
+  describe 'PUT /api/v1/lists/:id' do
     before do
       valid_attributes = { title: 'Mozart' }
-      put "/api/v1/boards/#{board_id}/lists/#{id}", params: valid_attributes
+      put "/api/v1/lists/#{id}", params: valid_attributes
     end
 
     context 'when list exists' do
@@ -115,8 +115,8 @@ RSpec.describe 'lists API' do
     end
   end
 
-  describe 'DELETE /api/v1/boards/:id' do
-    before { delete "/api/v1/boards/#{board_id}/lists/#{id}" }
+  describe 'DELETE /api/v1/lists/:id' do
+    before { delete "/api/v1/lists/#{id}" }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
