@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,38 +12,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_18_105828) do
-
+ActiveRecord::Schema.define(version: 20_190_218_105_828) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension 'plpgsql'
 
-  create_table "boards", force: :cascade do |t|
-    t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table 'boards', force: :cascade do |t|
+    t.string 'title'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
   end
 
-  create_table "cards", force: :cascade do |t|
-    t.string "content"
-    t.text "description"
-    t.integer "position"
-    t.bigint "list_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["list_id", "position"], name: "index_cards_on_list_id_and_position", unique: true
-    t.index ["list_id"], name: "index_cards_on_list_id"
+  create_table 'cards', force: :cascade do |t|
+    t.string 'content'
+    t.text 'description'
+    t.integer 'position'
+    t.bigint 'list_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index %w[list_id position], name: 'index_cards_on_list_id_and_position', unique: true
+    t.index ['list_id'], name: 'index_cards_on_list_id'
   end
 
-  create_table "lists", force: :cascade do |t|
-    t.string "title"
-    t.integer "position"
-    t.bigint "board_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["board_id", "position"], name: "index_lists_on_board_id_and_position", unique: true
-    t.index ["board_id"], name: "index_lists_on_board_id"
+  create_table 'lists', force: :cascade do |t|
+    t.string 'title'
+    t.integer 'position'
+    t.bigint 'board_id'
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.index %w[board_id position], name: 'index_lists_on_board_id_and_position', unique: true
+    t.index ['board_id'], name: 'index_lists_on_board_id'
   end
 
-  add_foreign_key "cards", "lists"
-  add_foreign_key "lists", "boards"
+  add_foreign_key 'cards', 'lists'
+  add_foreign_key 'lists', 'boards'
 end

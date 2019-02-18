@@ -9,5 +9,6 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - "Rakefile"
+    - "db/schema.rb"
     - "**/*.rake"
     - "spec/**/*.rb"
