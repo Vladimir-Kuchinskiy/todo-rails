@@ -13,7 +13,7 @@ RSpec.describe Board, type: :model do
     context 'when board has lists' do
       it 'returns array of lists, ordered by position' do
         lists_array = create_list(:list, 3, board_id: board.id)
-        ordered_list_ids = lists_array.sort_by(&:position).map(&:id)
+        ordered_list_ids = lists_array.sort_by(&:position).map(&:id).map(&:to_s)
         expect(board.ordered_list_ids).to eq ordered_list_ids
       end
     end

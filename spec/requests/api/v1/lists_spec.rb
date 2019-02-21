@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'lists API' do
+RSpec.describe 'Lists API' do
   let!(:board) { create(:board) }
   let!(:lists) { create_list(:list, 20, board_id: board.id) }
   let(:board_id) { board.id }

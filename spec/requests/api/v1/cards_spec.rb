@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'cards API' do
+RSpec.describe 'Cards API' do
   let!(:list) { create(:list) }
   let!(:cards) { create_list(:card, 20, list_id: list.id) }
   let(:list_id) { list.id }

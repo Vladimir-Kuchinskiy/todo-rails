@@ -2,11 +2,12 @@
 
 class ListSerializer
   include FastJsonapi::ObjectSerializer
+  set_key_transform :camel_lower
 
   has_many :cards
 
   belongs_to :board
 
   attributes :title
-  attribute :cardIds, &:ordered_card_ids
+  attribute :card_ids, &:ordered_card_ids
 end

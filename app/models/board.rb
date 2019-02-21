@@ -6,6 +6,6 @@ class Board < ApplicationRecord
   validates :title, presence: true
 
   def ordered_list_ids
-    lists.ordered.ids
+    lists.ordered.ids.map(&:to_s)
   end
 end
