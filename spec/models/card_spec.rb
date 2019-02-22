@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Card, type: :model do
-  it { should belong_to(:list) }
+  it { is_expected.to belong_to(:list) }
 
-  it { should validate_presence_of(:content) }
-  it { should have_db_index(%i[list_id position]).unique(true) }
+  it { is_expected.to validate_presence_of(:content) }
+  it { is_expected.to have_db_index(%i[list_id position]).unique(true) }
 
   describe 'before_create' do
     context '#set_position' do
@@ -74,7 +74,7 @@ RSpec.describe Card, type: :model do
   end
 
   describe '#update_to_invalid_position' do
-    it 'should update to position out of positions range' do
+    it 'updates to position out of positions range' do
       list = create(:list)
       card = create(:card, list_id: list.id)
       create_list(:card, 3, list_id: list.id)
@@ -85,7 +85,7 @@ RSpec.describe Card, type: :model do
   end
 
   describe '#update_position' do
-    it 'should update position to passed to method' do
+    it 'updates position to passed to method' do
       card = create(:card)
       position = 1
       card.update_position(position)
@@ -94,7 +94,7 @@ RSpec.describe Card, type: :model do
   end
 
   describe '#resources_between_positions' do
-    it 'should return an array of list cards between positions' do
+    it 'returns an array of list cards between positions' do
       list = create(:list)
       cards = create_list(:card, 5, list_id: list.id)
       from = 1

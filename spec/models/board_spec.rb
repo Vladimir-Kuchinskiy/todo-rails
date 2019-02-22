@@ -3,9 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe Board, type: :model do
-  it { should have_many(:lists).dependent(:destroy) }
+  it { is_expected.to have_many(:lists).dependent(:destroy) }
 
-  it { should validate_presence_of(:title) }
+  it { is_expected.to validate_presence_of(:title) }
 
   describe '#ordered_list_ids' do
     let(:board) { create(:board) }

@@ -3,12 +3,12 @@
 require 'rails_helper'
 
 RSpec.describe List, type: :model do
-  it { should have_many(:cards).dependent(:destroy) }
+  it { is_expected.to have_many(:cards).dependent(:destroy) }
 
-  it { should belong_to(:board) }
+  it { is_expected.to belong_to(:board) }
 
-  it { should validate_presence_of(:title) }
-  it { should have_db_index(%i[board_id position]).unique(true) }
+  it { is_expected.to validate_presence_of(:title) }
+  it { is_expected.to have_db_index(%i[board_id position]).unique(true) }
 
   describe 'before_create' do
     context '#set_position' do
@@ -94,7 +94,7 @@ RSpec.describe List, type: :model do
   end
 
   describe '#update_to_invalid_position' do
-    it 'should update to position out of positions range' do
+    it 'updates to position out of positions range' do
       board = create(:board)
       list = create(:list, board_id: board.id)
       create_list(:list, 3, board_id: board.id)
@@ -105,7 +105,7 @@ RSpec.describe List, type: :model do
   end
 
   describe '#update_position' do
-    it 'should update position to passed to method' do
+    it 'updates position to passed to method' do
       list = create(:list)
       position = 1
       list.update_position(position)
@@ -133,7 +133,7 @@ RSpec.describe List, type: :model do
   end
 
   describe '#resources_between_positions' do
-    it 'should return an array of board lists between positions' do
+    it 'returns an array of board lists between positions' do
       board = create(:board)
       lists = create_list(:list, 5, board_id: board.id)
       from = 1

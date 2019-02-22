@@ -12,13 +12,14 @@ gem 'rails', '~> 5.2.2'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 gem 'rack-cors'
-
 gem 'dotenv-rails'
-
 gem 'fast_jsonapi'
+gem 'bcrypt'
+gem 'jwt'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rubocop-rspec'
   gem 'pry-rails'
   gem 'rspec-rails'
 end

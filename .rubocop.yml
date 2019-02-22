@@ -12,3 +12,5 @@ Metrics/BlockLength:
     - "db/schema.rb"
     - "**/*.rake"
     - "spec/**/*.rb"
+# RSpec/NestedGroups:
+#   Max: 6

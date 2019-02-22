@@ -3,6 +3,8 @@
 class Board < ApplicationRecord
   has_many :lists, dependent: :destroy
 
+  belongs_to :user, optional: true
+
   validates :title, presence: true
 
   def ordered_list_ids
