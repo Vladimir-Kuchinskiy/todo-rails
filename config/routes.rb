@@ -5,7 +5,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :boards do
         resources :lists, shallow: true do
-          resources :cards, shallow: true, except: :index
+          resources :cards, shallow: true, except: :index do
+            resource :move, only: :create
+          end
+          resource :move, only: :create
         end
       end
     end
