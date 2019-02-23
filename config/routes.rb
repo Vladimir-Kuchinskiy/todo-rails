@@ -11,6 +11,8 @@ Rails.application.routes.draw do
           resource :move, only: :create
         end
       end
+      post 'auth/login', to: 'authentication#create'
+      post 'signup', to: 'users#create'
     end
   end
 end

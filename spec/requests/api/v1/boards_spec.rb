@@ -3,11 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Boards API', type: :request do
-  let!(:boards) { create_list(:board, 10) }
+  let(:user) { create(:user) }
+  let!(:boards) { create_list(:board, 10, user_id: user.id) }
   let(:board_id) { boards.first.id }
+  let(:headers) { valid_headers }
 
   describe 'GET /api/v1/boards' do
-    before { get '/api/v1/boards' }
+    before do
+      get '/api/v1/boards', headers: headers
+    end
 
     it 'returns boards' do
       expect(json['data']).not_to be_empty
@@ -20,7 +24,7 @@ RSpec.describe 'Boards API', type: :request do
   end
 
   describe 'GET /api/v1/boards/:id' do
-    before { get "/api/v1/boards/#{board_id}" }
+    before { get "/api/v1/boards/#{board_id}", headers: headers }
 
     context 'when the record exists' do
       it 'returns the board' do
@@ -49,8 +53,8 @@ RSpec.describe 'Boards API', type: :request do
   describe 'POST /api/v1/boards' do
     context 'when the request is valid' do
       before do
-        valid_attributes = { title: 'Learn Elm' }
-        post '/api/v1/boards', params: valid_attributes
+        valid_attributes = { title: 'Learn Elm' }.to_json
+        post '/api/v1/boards', params: valid_attributes, headers: headers
       end
 
       it 'creates a board' do
@@ -63,7 +67,7 @@ RSpec.describe 'Boards API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/api/v1/boards' }
+      before { post '/api/v1/boards', headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -79,8 +83,8 @@ RSpec.describe 'Boards API', type: :request do
   describe 'PUT /api/v1/boards/:id' do
     context 'when the record exists' do
       before do
-        valid_attributes = { title: 'Shopping' }
-        put "/api/v1/boards/#{board_id}", params: valid_attributes
+        valid_attributes = { title: 'Shopping' }.to_json
+        put "/api/v1/boards/#{board_id}", params: valid_attributes, headers: headers
       end
 
       it 'updates the record' do
@@ -94,7 +98,7 @@ RSpec.describe 'Boards API', type: :request do
   end
 
   describe 'DELETE /api/v1/boards/:id' do
-    before { delete "/api/v1/boards/#{board_id}" }
+    before { delete "/api/v1/boards/#{board_id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

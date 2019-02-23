@@ -7,12 +7,12 @@ module Api
 
       # GET /boards
       def index
-        json_response(BoardSerializer.new(Board.all))
+        json_response(BoardSerializer.new(current_user.boards))
       end
 
       # POST /boards
       def create
-        @board = Board.create!(board_params)
+        @board = current_user.boards.create!(board_params)
         json_response(BoardSerializer.new(@board), :created)
       end
 
@@ -40,7 +40,7 @@ module Api
       end
 
       def set_board
-        @board = Board.find(params[:id])
+        @board = current_user.boards.find(params[:id])
       end
     end
   end

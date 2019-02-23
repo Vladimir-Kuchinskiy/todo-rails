@@ -3,13 +3,16 @@
 require 'rails_helper'
 
 RSpec.describe 'Cards API' do
-  let!(:list) { create(:list) }
+  let(:user) { create(:user) }
+  let(:board) { create(:board, user_id: user.id) }
+  let!(:list) { create(:list, board_id: board.id) }
   let!(:cards) { create_list(:card, 20, list_id: list.id) }
   let(:list_id) { list.id }
   let(:id) { cards.first.id }
+  let(:headers) { valid_headers }
 
   describe 'GET /api/v1/cards/:id' do
-    before { get "/api/v1/cards/#{id}" }
+    before { get "/api/v1/cards/#{id}", headers: headers }
 
     context 'when list -> card exists' do
       it 'returns status code 200' do
@@ -37,8 +40,8 @@ RSpec.describe 'Cards API' do
   describe 'POST /api/v1/lists/:list_id/cards' do
     context 'when request attributes are valid' do
       before do
-        valid_attributes = { content: 'Visit Narnia', description: 'A very important card' }
-        post "/api/v1/lists/#{list_id}/cards", params: valid_attributes
+        valid_attributes = { content: 'Visit Narnia', description: 'A very important card' }.to_json
+        post "/api/v1/lists/#{list_id}/cards", params: valid_attributes, headers: headers
       end
 
       it 'returns status code 201' do
@@ -47,7 +50,7 @@ RSpec.describe 'Cards API' do
     end
 
     context 'when an invalid request' do
-      before { post "/api/v1/lists/#{list_id}/cards", params: {} }
+      before { post "/api/v1/lists/#{list_id}/cards", headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -61,8 +64,8 @@ RSpec.describe 'Cards API' do
 
   describe 'PUT /api/v1/cards/:id' do
     before do
-      valid_attributes = { content: 'Mozart' }
-      put "/api/v1/cards/#{id}", params: valid_attributes
+      valid_attributes = { content: 'Mozart' }.to_json
+      put "/api/v1/cards/#{id}", params: valid_attributes, headers: headers
     end
 
     context 'when card exists' do
@@ -90,7 +93,7 @@ RSpec.describe 'Cards API' do
   end
 
   describe 'DELETE /api/v1/cards/:id' do
-    before { delete "/api/v1/cards/#{id}" }
+    before { delete "/api/v1/cards/#{id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)
