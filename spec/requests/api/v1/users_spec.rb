@@ -35,9 +35,13 @@ RSpec.describe 'Users API', type: :request do
         expect(response).to have_http_status(422)
       end
 
-      it 'returns failure message' do
+      it 'returns failure message for email' do
+        expect(json['message']).to include("Email can't be blank")
+      end
+
+      it 'returns failure message for password' do
         expect(json['message'])
-          .to match(/Validation failed: Password can't be blank, Email can't be blank/)
+          .to include("Password can't be blank, Password is too short (minimum is 8 characters)")
       end
     end
   end
