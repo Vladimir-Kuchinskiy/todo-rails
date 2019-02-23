@@ -9,10 +9,10 @@ RSpec.describe 'Users API', type: :request do
     attributes_for(:user, password: user.password, password_confirmation: user.password).to_json
   end
 
-  describe 'POST /api/v1/signup' do
+  describe 'POST /api/signup' do
     context 'when valid request' do
       before do
-        post '/api/v1/signup', params: valid_attributes, headers: headers
+        post '/api/signup', params: valid_attributes, headers: headers
       end
 
       it 'creates a new user' do
@@ -29,7 +29,7 @@ RSpec.describe 'Users API', type: :request do
     end
 
     context 'when invalid request' do
-      before { post '/api/v1/signup', headers: headers }
+      before { post '/api/signup', headers: headers }
 
       it 'does not create a new user' do
         expect(response).to have_http_status(422)

@@ -11,8 +11,8 @@ RSpec.describe 'Cards API' do
   let(:id) { cards.first.id }
   let(:headers) { valid_headers }
 
-  describe 'GET /api/v1/cards/:id' do
-    before { get "/api/v1/cards/#{id}", headers: headers }
+  describe 'GET /api/cards/:id' do
+    before { get "/api/cards/#{id}", headers: headers }
 
     context 'when list -> card exists' do
       it 'returns status code 200' do
@@ -37,11 +37,11 @@ RSpec.describe 'Cards API' do
     end
   end
 
-  describe 'POST /api/v1/lists/:list_id/cards' do
+  describe 'POST /api/lists/:list_id/cards' do
     context 'when request attributes are valid' do
       before do
         valid_attributes = { content: 'Visit Narnia', description: 'A very important card' }.to_json
-        post "/api/v1/lists/#{list_id}/cards", params: valid_attributes, headers: headers
+        post "/api/lists/#{list_id}/cards", params: valid_attributes, headers: headers
       end
 
       it 'returns status code 201' do
@@ -50,7 +50,7 @@ RSpec.describe 'Cards API' do
     end
 
     context 'when an invalid request' do
-      before { post "/api/v1/lists/#{list_id}/cards", headers: headers }
+      before { post "/api/lists/#{list_id}/cards", headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -62,10 +62,10 @@ RSpec.describe 'Cards API' do
     end
   end
 
-  describe 'PUT /api/v1/cards/:id' do
+  describe 'PUT /api/cards/:id' do
     before do
       valid_attributes = { content: 'Mozart' }.to_json
-      put "/api/v1/cards/#{id}", params: valid_attributes, headers: headers
+      put "/api/cards/#{id}", params: valid_attributes, headers: headers
     end
 
     context 'when card exists' do
@@ -92,8 +92,8 @@ RSpec.describe 'Cards API' do
     end
   end
 
-  describe 'DELETE /api/v1/cards/:id' do
-    before { delete "/api/v1/cards/#{id}", headers: headers }
+  describe 'DELETE /api/cards/:id' do
+    before { delete "/api/cards/#{id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

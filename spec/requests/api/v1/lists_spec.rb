@@ -10,8 +10,8 @@ RSpec.describe 'Lists API' do
   let(:id) { lists.first.id }
   let(:headers) { valid_headers }
 
-  describe 'GET /api/v1/boards/:board_id/lists' do
-    before { get "/api/v1/boards/#{board_id}/lists", headers: headers }
+  describe 'GET /api/boards/:board_id/lists' do
+    before { get "/api/boards/#{board_id}/lists", headers: headers }
 
     context 'when board exists' do
       it 'returns status code 200' do
@@ -36,8 +36,8 @@ RSpec.describe 'Lists API' do
     end
   end
 
-  describe 'GET /api/v1/lists/:id' do
-    before { get "/api/v1/lists/#{id}", headers: headers }
+  describe 'GET /api/lists/:id' do
+    before { get "/api/lists/#{id}", headers: headers }
 
     context 'when board list exists' do
       it 'returns status code 200' do
@@ -62,11 +62,11 @@ RSpec.describe 'Lists API' do
     end
   end
 
-  describe 'POST /api/v1/boards/:board_id/lists' do
+  describe 'POST /api/boards/:board_id/lists' do
     context 'when request attributes are valid' do
       before do
         valid_attributes = { title: 'Visit Narnia' }.to_json
-        post "/api/v1/boards/#{board_id}/lists", params: valid_attributes, headers: headers
+        post "/api/boards/#{board_id}/lists", params: valid_attributes, headers: headers
       end
 
       it 'returns status code 201' do
@@ -75,7 +75,7 @@ RSpec.describe 'Lists API' do
     end
 
     context 'when an invalid request' do
-      before { post "/api/v1/boards/#{board_id}/lists", headers: headers }
+      before { post "/api/boards/#{board_id}/lists", headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
@@ -87,10 +87,10 @@ RSpec.describe 'Lists API' do
     end
   end
 
-  describe 'PUT /api/v1/lists/:id' do
+  describe 'PUT /api/lists/:id' do
     before do
       valid_attributes = { title: 'Mozart' }.to_json
-      put "/api/v1/lists/#{id}", params: valid_attributes, headers: headers
+      put "/api/lists/#{id}", params: valid_attributes, headers: headers
     end
 
     context 'when list exists' do
@@ -117,8 +117,8 @@ RSpec.describe 'Lists API' do
     end
   end
 
-  describe 'DELETE /api/v1/lists/:id' do
-    before { delete "/api/v1/lists/#{id}", headers: headers }
+  describe 'DELETE /api/lists/:id' do
+    before { delete "/api/lists/#{id}", headers: headers }
 
     it 'returns status code 204' do
       expect(response).to have_http_status(204)

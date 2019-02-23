@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Authentication', type: :request do
-  describe 'POST /api/v1/auth/login' do
+  describe 'POST /api/auth/login' do
     let!(:user) { create(:user) }
     let(:headers) { valid_headers.except('Authorization') }
     let(:valid_credentials) { { email: user.email, password: user.password }.to_json }
@@ -13,7 +13,7 @@ RSpec.describe 'Authentication', type: :request do
     # before { allow(request).to receive(:headers).and_return(headers) }
 
     context 'When request is valid' do
-      before { post '/api/v1/auth/login', params: valid_credentials, headers: headers }
+      before { post '/api/auth/login', params: valid_credentials, headers: headers }
 
       it 'returns an authentication token' do
         expect(json['auth_token']).not_to be_nil
@@ -21,7 +21,7 @@ RSpec.describe 'Authentication', type: :request do
     end
 
     context 'When request is invalid' do
-      before { post '/api/v1/auth/login', params: invalid_credentials, headers: headers }
+      before { post '/api/auth/login', params: invalid_credentials, headers: headers }
 
       it 'returns a failure message' do
         expect(json['message']).to match(/Invalid credentials/)

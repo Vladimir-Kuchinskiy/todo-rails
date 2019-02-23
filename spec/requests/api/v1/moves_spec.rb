@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Moves API' do
-  describe 'POST /api/v1/lists/:list_id/move' do
+  describe 'POST /api/lists/:list_id/move' do
     let(:user) { create(:user) }
     let(:board) { create(:board, user_id: user.id) }
     let(:lists) { create_list(:list, 4, board_id: board.id) }
@@ -11,7 +11,7 @@ RSpec.describe 'Moves API' do
     let(:headers) { valid_headers }
 
     context 'with invalid params' do
-      before { post "/api/v1/lists/#{list_id}/move", headers: headers }
+      before { post "/api/lists/#{list_id}/move", headers: headers }
 
       it 'returns status code 400' do
         expect(response).to have_http_status(400)
@@ -26,7 +26,7 @@ RSpec.describe 'Moves API' do
       before do
         last_position = lists.count - 1
         valid_params = { destination_position: last_position }.to_json
-        post "/api/v1/lists/#{list_id}/move", params: valid_params, headers: headers
+        post "/api/lists/#{list_id}/move", params: valid_params, headers: headers
       end
 
       it 'returns status code 200' do
@@ -47,7 +47,7 @@ RSpec.describe 'Moves API' do
     end
   end
 
-  describe 'POST /api/v1/cards/:card_id/move' do
+  describe 'POST /api/cards/:card_id/move' do
     let(:user) { create(:user) }
     let(:board) { create(:board, user_id: user.id) }
     let(:list) { create(:list) }
@@ -56,7 +56,7 @@ RSpec.describe 'Moves API' do
     let(:headers) { valid_headers }
 
     context 'with invalid params' do
-      before { post "/api/v1/cards/#{card_id}/move", headers: headers }
+      before { post "/api/cards/#{card_id}/move", headers: headers }
 
       it 'returns status code 400' do
         expect(response).to have_http_status(400)
@@ -72,7 +72,7 @@ RSpec.describe 'Moves API' do
         before do
           position = cards.last.position
           valid_params = { destination_position: position, destination_list_id: list.id }.to_json
-          post "/api/v1/cards/#{card_id}/move", params: valid_params, headers: headers
+          post "/api/cards/#{card_id}/move", params: valid_params, headers: headers
         end
 
         it 'returns status code 200' do
@@ -97,7 +97,7 @@ RSpec.describe 'Moves API' do
         let(:destination_list) { create(:list) }
         let(:valid_params) { { destination_position: position, destination_list_id: destination_list.id }.to_json }
 
-        before { post "/api/v1/cards/#{card_id}/move", params: valid_params, headers: headers }
+        before { post "/api/cards/#{card_id}/move", params: valid_params, headers: headers }
 
         context 'with same lists board' do
           let(:destination_list) { create(:list, board_id: list.board.id) }
