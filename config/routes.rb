@@ -15,5 +15,6 @@ Rails.application.routes.draw do
 
     post 'auth/login', to: 'authentication#create'
     post 'signup', to: 'users#create'
+    get 'profile', to: 'users#show'
   end
 end
