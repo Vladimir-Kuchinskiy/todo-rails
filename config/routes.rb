@@ -11,6 +11,9 @@ Rails.application.routes.draw do
           resource :move, only: :create
         end
       end
+      resources :teams do
+        resources :boards, only: %i[create destroy]
+      end
     end
 
     post 'auth/login', to: 'authentication#create'

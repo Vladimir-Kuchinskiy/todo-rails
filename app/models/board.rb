@@ -4,6 +4,7 @@ class Board < ApplicationRecord
   has_many :lists, dependent: :destroy
 
   belongs_to :user
+  belongs_to :team, optional: true
 
   validates :title, presence: true
 
