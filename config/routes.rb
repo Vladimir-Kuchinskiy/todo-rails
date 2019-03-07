@@ -13,7 +13,7 @@ Rails.application.routes.draw do
       end
       resources :teams do
         resources :boards, only: %i[create destroy]
-        resources :invitations
+        resources :invitations, only: %i[create destroy]
       end
     end
 
