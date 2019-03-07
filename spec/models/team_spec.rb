@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Team, type: :model do
-  it { is_expected.to have_many(:boards) }
+  it { is_expected.to have_many(:boards).dependent(:nullify) }
   it { is_expected.to have_many(:user_teams) }
   it { is_expected.to have_many(:users).through(:user_teams) }
 

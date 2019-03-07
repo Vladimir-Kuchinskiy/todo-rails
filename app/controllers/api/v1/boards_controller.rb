@@ -7,12 +7,12 @@ module Api
 
       # GET /boards
       def index
-        json_response(BoardSerializer.new(current_user.boards))
+        json_response(BoardSerializer.new(current_user.boards.personal))
       end
 
       # POST /boards
       def create
-        @board = current_user.boards.create!(board_params)
+        @board = BoardCreator.call(board_params, current_user)
         json_response(BoardSerializer.new(@board), :created)
       end
 
@@ -36,7 +36,7 @@ module Api
       private
 
       def board_params
-        params.permit(:title)
+        params.permit(:title, :team_id)
       end
 
       def set_board

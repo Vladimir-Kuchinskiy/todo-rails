@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Team < ApplicationRecord
-  has_many :boards
+  has_many :boards, dependent: :nullify
   has_many :user_teams, dependent: :destroy
   has_many :users, through: :user_teams
 
