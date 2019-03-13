@@ -12,9 +12,10 @@ Rails.application.routes.draw do
         end
       end
       resources :teams do
-        resources :boards, only: %i[create destroy]
-        resources :invitations, only: %i[create destroy]
+        resources :boards, only: %i[show create destroy]
+        resources :invitations, shallow: true, only: %i[create destroy]
       end
+      get '/invitations', to: 'invitations#index'
     end
 
     post 'auth/login', to: 'authentication#create'

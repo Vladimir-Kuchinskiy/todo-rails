@@ -40,7 +40,11 @@ module Api
       end
 
       def set_board
-        @board = current_user.boards.find(params[:id])
+        @board = if params[:team_id]
+                   Team.find_by!(id: params[:team_id]).boards.find(params[:id])
+                 else
+                   current_user.boards.find(params[:id])
+                 end
       end
     end
   end

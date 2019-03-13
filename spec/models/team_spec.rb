@@ -6,6 +6,7 @@ RSpec.describe Team, type: :model do
   it { is_expected.to have_many(:boards).dependent(:nullify) }
   it { is_expected.to have_many(:user_teams) }
   it { is_expected.to have_many(:users).through(:user_teams) }
+  it { is_expected.to have_many(:invitations).dependent(:destroy) }
 
   it { is_expected.to validate_presence_of(:name) }
 
@@ -30,7 +31,9 @@ RSpec.describe Team, type: :model do
     context 'when team has no users' do
       it 'returns an array of emails of no member users' do
         new_team = create(:team)
-        expect(new_team.emails_of_users_not_in_the_team).to eq User.all.map(&:email)
+        expect(new_team.emails_of_users_not_in_the_team).to eq(User.all.map do |user|
+          { email: user.email, is_invited: user.invited?(new_team) }
+        end)
       end
     end
   end

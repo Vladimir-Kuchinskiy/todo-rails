@@ -31,7 +31,7 @@ RSpec.describe List, type: :model do
   end
 
   describe 'after_destroy' do
-    describe '#shift_lists_positions' do
+    describe '#shift_positions' do
       let(:board) { create(:board) }
 
       context 'when board had only 1 list' do

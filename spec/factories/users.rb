@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-# spec/factories/users.rb
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: %i[creator receiver] do
     email { Faker::Internet.email }
     password { Faker::Internet.password(8) }
   end

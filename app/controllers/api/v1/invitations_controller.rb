@@ -2,10 +2,21 @@
 
 module Api
   module V1
-    class InvitationsController < ApplicationControler
-      def create; end
+    class InvitationsController < ApplicationController
+      def index
+        json_response(InvitationSerializer.new(current_user.received_invitations))
+      end
 
-      def destroy; end
+      def create
+        invitation = current_user.create_invitation(params)
+        InvitationMailer.with(invitation: invitation).send_invitation.deliver_now
+        head :created
+      end
+
+      def destroy
+        deleted_invitation = ProcessInviteResponse.call(params)
+        json_response(InvitationSerializer.new(deleted_invitation, include: %i[team]))
+      end
     end
   end
 end

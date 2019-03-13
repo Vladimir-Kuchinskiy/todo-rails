@@ -6,7 +6,7 @@ module Api
       before_action :set_team, only: %i[show update destroy]
 
       def index
-        json_response(TeamSerializer.new(current_user.teams))
+        json_response(TeamSerializer.new(current_user.teams.ordered))
       end
 
       def create
@@ -15,7 +15,7 @@ module Api
       end
 
       def show
-        json_response(TeamSerializer.new(@team, include: %i[boards users]))
+        json_response(TeamSerializer.new(@team, include: %i[boards users user_teams]))
       end
 
       def update

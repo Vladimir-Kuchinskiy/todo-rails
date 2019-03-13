@@ -1,0 +1,5 @@
+<h3>
+  Hey, You've got a new invitation from <%= @invitation.creator.email %> to a
+  team called <%= @invitation.team.name %>
+</h3>
+<h4>You can <%= link_to 'Accept or declare this invitation', "localhost:3001/dashboard/invites" %></h4>

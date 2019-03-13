@@ -29,7 +29,7 @@ RSpec.describe Card, type: :model do
   end
 
   describe 'after_destroy' do
-    describe '#shift_cards_positions' do
+    describe '#shift_positions' do
       let(:list) { create(:list) }
 
       context 'when list had only 1 card' do

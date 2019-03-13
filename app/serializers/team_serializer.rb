@@ -6,6 +6,7 @@ class TeamSerializer
 
   has_many :boards
   has_many :users
+  has_many :user_teams
 
   attributes :name
   attribute :user_emails, &:emails_of_users_not_in_the_team
