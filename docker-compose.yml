@@ -17,5 +17,12 @@ services:
   db:
     image: postgres:10.3-alpine
     env_file: .env
+    depends_on:
+      - mailcatcher
     volumes:
       - ./db-data:/var/lib/postgresql/db-data
+  mailcatcher:
+    image: yappabe/mailcatcher
+    ports:
+      - 1025:1025
+      - 1080:1080
