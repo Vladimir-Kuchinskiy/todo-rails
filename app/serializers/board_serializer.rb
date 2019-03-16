@@ -8,4 +8,7 @@ class BoardSerializer
 
   attributes :title
   attribute :list_ids, &:ordered_list_ids
+  attribute :is_creator do |board, params|
+    board.user_id == params[:current_user_id]
+  end
 end

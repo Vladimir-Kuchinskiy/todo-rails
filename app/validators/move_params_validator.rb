@@ -14,10 +14,6 @@ class MoveParamsValidator
     end
   end
 
-  def initialize(params)
-    @params = params
-  end
-
   def self.validate!(params)
     raise InvalidMoveParamsError unless new(params).valid?
   end
@@ -29,6 +25,10 @@ class MoveParamsValidator
   private
 
   attr_reader :params
+
+  def initialize(params)
+    @params = params
+  end
 
   def valid_params?
     valid_card_params? || valid_list_params?

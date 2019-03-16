@@ -17,20 +17,35 @@ RSpec.describe BoardCreator do
     end
 
     context 'when creates board for team' do
-      context 'when valid_params' do
-        let(:team) { create(:user_team, user_id: user.id).team }
-        let(:valid_params) { { title: 'Team First', team_id: team.id } }
+      let(:team) { create(:user_team, user_id: user.id, roles: ['creator']).team }
+      let(:valid_params) { { title: 'Team First', team_id: team.id } }
 
-        it 'creates new board for user' do
-          expect { described_class.call(valid_params, user) }.to change { user.boards.count }.by 1
+      context 'when a team creator' do
+        context 'when valid_params' do
+          it 'creates new board for user' do
+            expect { described_class.call(valid_params, user) }.to change { user.boards.count }.by 1
+          end
+
+          it 'does not change personal boards count for user' do
+            expect { described_class.call(valid_params, user) }.to change { user.boards.personal.count }.by 0
+          end
+
+          it 'creates new board for team' do
+            expect { described_class.call(valid_params, user) }.to change { team.boards.count }.by 1
+          end
         end
+      end
 
-        it 'does not change personal boards count for user' do
-          expect { described_class.call(valid_params, user) }.to change { user.boards.personal.count }.by 0
-        end
+      context 'when not a team creator' do
+        context 'when valid_params' do
+          let(:member) { create(:user) }
 
-        it 'creates new board for team' do
-          expect { described_class.call(valid_params, user) }.to change { team.boards.count }.by 1
+          before { create(:user_team, user_id: member.id, team_id: team.id) }
+
+          it 'creates new board for user' do
+            expect { described_class.call(valid_params, member) }
+              .to raise_error(ExceptionHandler::DeleteBoardAccessDenied, %r{Sorry, you can not create/update/delete})
+          end
         end
       end
     end

@@ -33,5 +33,9 @@ class Message
     def expired_token
       'Sorry, your token has expired. Please login to continue.'
     end
+
+    def board_not_allowed
+      'Sorry, you can not create/update/delete a board, because you are not a creator of a team'
+    end
   end
 end

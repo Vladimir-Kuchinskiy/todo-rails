@@ -10,4 +10,7 @@ class TeamSerializer
 
   attributes :name
   attribute :user_emails, &:emails_of_users_not_in_the_team
+  attribute :creator_email do |team|
+    team.creator.email
+  end
 end

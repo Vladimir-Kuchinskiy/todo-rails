@@ -13,4 +13,12 @@ class Team < ApplicationRecord
   def emails_of_users_not_in_the_team
     User.where.not(id: users.ids).map { |user| { email: user.email, is_invited: user.invited?(self) } }
   end
+
+  def creator?(user)
+    user_teams.find_by!(user_id: user.id).roles.include?('creator')
+  end
+
+  def creator
+    user_teams.find_by(roles: ['creator']).user
+  end
 end

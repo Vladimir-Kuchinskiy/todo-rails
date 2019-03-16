@@ -51,31 +51,65 @@ RSpec.describe 'Boards API', type: :request do
   end
 
   describe 'POST /api/boards' do
-    context 'when the request is valid' do
-      before do
-        valid_attributes = { title: 'Learn Elm' }.to_json
-        post '/api/boards', params: valid_attributes, headers: headers
+    context 'when tries to create personal board' do
+      context 'when the request is valid' do
+        before do
+          valid_attributes = { title: 'Learn Elm' }.to_json
+          post '/api/boards', params: valid_attributes, headers: headers
+        end
+
+        it 'creates a board' do
+          expect(json['data']['attributes']['title']).to eq('Learn Elm')
+        end
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
       end
 
-      it 'creates a board' do
-        expect(json['data']['attributes']['title']).to eq('Learn Elm')
-      end
+      context 'when the request is invalid' do
+        before { post '/api/boards', headers: headers }
 
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match(/Validation failed: Title can't be blank/)
+        end
       end
     end
 
-    context 'when the request is invalid' do
-      before { post '/api/boards', headers: headers }
+    context 'when tries to create team board' do
+      let(:team) { create(:user_team, user_id: user.id, team_id: create(:team).id, roles: ['creator']).team }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
+      before do
+        valid_attributes = { title: 'Learn Elm' }.to_json
+        post "/api/teams/#{team.id}/boards", params: valid_attributes, headers: headers
       end
 
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/Validation failed: Title can't be blank/)
+      context 'when a creator of a team' do
+        context 'when the request is valid' do
+          it 'creates a board' do
+            expect(json['data']['attributes']['title']).to eq('Learn Elm')
+          end
+
+          it 'returns status code 201' do
+            expect(response).to have_http_status(201)
+          end
+        end
+      end
+
+      context 'when not a creator of a team' do
+        context 'when the request is valid' do
+          let!(:user) { create(:user_team, team_id: team.id, user_id: create(:user).id).user }
+          let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+
+          it 'returns status code 403' do
+            expect(response).to have_http_status(403)
+          end
+        end
       end
     end
   end
@@ -98,10 +132,34 @@ RSpec.describe 'Boards API', type: :request do
   end
 
   describe 'DELETE /api/boards/:id' do
-    before { delete "/api/boards/#{board_id}", headers: headers }
+    context 'when tries to delete personal board' do
+      before { delete "/api/boards/#{board_id}", headers: headers }
 
-    it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+      it 'returns status code 204' do
+        expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'when tries to delete team board' do
+      let(:team) { create(:user_team, user_id: user.id, team_id: create(:team).id, roles: ['creator']).team }
+      let(:team_board) { create(:board, team_id: team.id, user_id: user.id) }
+
+      before { delete "/api/teams/#{team.id}/boards/#{team_board.id}", headers: headers }
+
+      context 'when a creator' do
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
+        end
+      end
+
+      context 'when not a creator' do
+        let!(:user) { create(:user_team, team_id: team.id, user_id: create(:user).id).user }
+        let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+
+        it 'returns status code 403' do
+          expect(response).to have_http_status(403)
+        end
+      end
     end
   end
 end
