@@ -15,7 +15,11 @@ module Api
       end
 
       def show
-        json_response(TeamSerializer.new(@team, include: %i[boards users user_teams]))
+        json_response(TeamSerializer.new(
+                        @team,
+                        include: %i[boards users user_teams],
+                        params: { current_user: current_user }
+                      ))
       end
 
       def update

@@ -115,7 +115,7 @@ RSpec.describe 'Boards API', type: :request do
   end
 
   describe 'PUT /api/boards/:id' do
-    context 'when the record exists' do
+    context 'when tries to update personal board' do
       before do
         valid_attributes = { title: 'Shopping' }.to_json
         put "/api/boards/#{board_id}", params: valid_attributes, headers: headers
@@ -127,6 +127,35 @@ RSpec.describe 'Boards API', type: :request do
 
       it 'returns status code 204' do
         expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'when tries to update team board' do
+      let(:team) { create(:user_team, user_id: user.id, team_id: create(:team).id, roles: ['creator']).team }
+      let(:team_board) { create(:board, team_id: team.id, user_id: user.id) }
+
+      before do
+        valid_attributes = { title: 'Shopping' }.to_json
+        put "/api/teams/#{team.id}/boards/#{team_board.id}", params: valid_attributes, headers: headers
+      end
+
+      context 'when creator of a team' do
+        it 'updates the record' do
+          expect(response.body).to be_empty
+        end
+
+        it 'returns status code 204' do
+          expect(response).to have_http_status(204)
+        end
+      end
+
+      context 'when not a creator of a team' do
+        let!(:user) { create(:user_team, team_id: team.id, user_id: create(:user).id).user }
+        let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+
+        it 'returns status code 403' do
+          expect(response).to have_http_status(403)
+        end
       end
     end
   end

@@ -15,6 +15,8 @@ class Team < ApplicationRecord
   end
 
   def creator?(user)
+    return false unless user
+
     user_teams.find_by!(user_id: user.id).roles.include?('creator')
   end
 

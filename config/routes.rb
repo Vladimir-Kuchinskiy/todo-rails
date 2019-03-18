@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         end
       end
       resources :teams do
-        resources :boards, only: %i[show create destroy]
+        resources :boards, only: %i[show create update destroy]
         resources :invitations, shallow: true, only: %i[create destroy]
       end
       get '/invitations', to: 'invitations#index'
