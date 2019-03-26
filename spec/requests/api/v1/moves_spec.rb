@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Moves API' do
+RSpec.describe 'Moves API', type: :request do
   describe 'POST /api/lists/:list_id/move' do
     let(:user) { create(:user) }
     let(:board) { create(:board, user_id: user.id) }

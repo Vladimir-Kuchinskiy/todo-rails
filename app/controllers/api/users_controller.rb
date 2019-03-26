@@ -15,10 +15,6 @@ module Api
       end
     end
 
-    def show
-      json_response({ profile: current_user.profile }, :ok)
-    end
-
     private
 
     def user_params

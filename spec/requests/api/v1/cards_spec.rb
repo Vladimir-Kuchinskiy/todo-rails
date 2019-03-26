@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Cards API' do
+RSpec.describe 'Cards API', type: :request do
   let(:user) { create(:user) }
   let(:board) { create(:board, user_id: user.id) }
   let!(:list) { create(:list, board_id: board.id) }

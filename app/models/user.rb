@@ -3,6 +3,10 @@
 class User < ApplicationRecord
   has_secure_password
 
+  after_create :create_profile
+
+  has_one :profile, dependent: :destroy
+
   has_many :boards
   has_many :user_teams, dependent: :destroy
   has_many :teams, through: :user_teams
@@ -12,10 +16,6 @@ class User < ApplicationRecord
   validates :email, :password, presence: true
   validates :email, uniqueness: true
   validates :password, length: { minimum: 8 }
-
-  def profile
-    { email: email }
-  end
 
   def create_invitation(params)
     receiver = User.find_by!(email: params[:receiver_email])
@@ -29,5 +29,11 @@ class User < ApplicationRecord
 
   def create_team(team_params)
     TeamCreator.call(team_params, self)
+  end
+
+  private
+
+  def create_profile
+    Profile.create(user_id: id)
   end
 end

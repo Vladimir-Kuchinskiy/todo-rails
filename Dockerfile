@@ -2,6 +2,7 @@ FROM ruby:alpine
 
 RUN apk update \
   && apk add --virtual build-dependencies \
+  imagemagick \
   gcc \
   wget \
   git \

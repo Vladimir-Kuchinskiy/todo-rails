@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Invitations API' do
+RSpec.describe 'Invitations API', type: :request do
   let(:user) { create(:user) }
   let(:receiver) { create(:user) }
   let(:team) { create(:user_team, user_id: user.id, team: create(:team), roles: ['creator']).team }

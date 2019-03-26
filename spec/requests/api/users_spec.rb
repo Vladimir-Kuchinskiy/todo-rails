@@ -46,28 +46,4 @@ RSpec.describe 'Users API', type: :request do
       end
     end
   end
-
-  describe 'GET /api/profile' do
-    context 'when valid request' do
-      before do
-        get '/api/profile', headers: { 'Authorization' => token_generator(create(:user).id) }
-      end
-
-      it 'returns status 200' do
-        expect(response).to have_http_status(200)
-      end
-
-      it 'returns a profile' do
-        expect(json['profile']).not_to be_nil
-      end
-    end
-
-    context 'when invalid request' do
-      before { get '/api/profile', headers: headers }
-
-      it 'returns response status 422' do
-        expect(response).to have_http_status(422)
-      end
-    end
-  end
 end

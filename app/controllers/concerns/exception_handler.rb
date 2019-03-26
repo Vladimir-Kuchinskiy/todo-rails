@@ -19,7 +19,7 @@ module ExceptionHandler
     rescue_from ActiveRecord::RecordNotFound do |e|
       json_response({ message: e.message }, :not_found)
     end
-    # JSON response with message; Status code 401 - Unauthorized
+
     rescue_from MoveParamsValidator::InvalidMoveParamsError do |e|
       json_response({ message: e.message }, :bad_request)
     end
