@@ -7,12 +7,21 @@ class Profile < ApplicationRecord
 
   has_one_attached :avatar
 
-  def avatar_url
+  validates :gender, inclusion: { in: GENDERS, if: :gender? }
+
+  delegate :email, to: :user
+
+  def avatar_url(host_with_port)
     if avatar.attached?
       variant = avatar.variant(resize: '200x400')
-      Rails.application.routes.url_helpers.rails_representation_path(variant, only_path: true)
+      path = Rails.application.routes.url_helpers.rails_representation_path(variant, only_path: true)
+      "http://#{host_with_port}#{path}"
     else
       ''
     end
+  end
+
+  def gender?
+    gender.present?
   end
 end

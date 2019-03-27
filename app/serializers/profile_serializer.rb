@@ -5,5 +5,9 @@ class ProfileSerializer
   set_key_transform :camel_lower
   include Rails.application.routes.url_helpers
 
-  attributes :first_name, :last_name, :gender, :avatar_url
+  attributes :first_name, :last_name, :gender, :email
+
+  attribute :avatar_url do |profile, params|
+    profile.avatar_url(params[:host_with_port])
+  end
 end
