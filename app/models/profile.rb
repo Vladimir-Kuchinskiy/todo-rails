@@ -13,7 +13,7 @@ class Profile < ApplicationRecord
 
   def avatar_url(host_with_port)
     if avatar.attached?
-      variant = avatar.variant(resize: '200x400')
+      variant = avatar.variant(resize: '500x500')
       path = Rails.application.routes.url_helpers.rails_representation_path(variant, only_path: true)
       "http://#{host_with_port}#{path}"
     else
