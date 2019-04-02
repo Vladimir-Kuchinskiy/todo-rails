@@ -10,4 +10,6 @@ class ProfileSerializer
   attribute :avatar_url do |profile, params|
     profile.avatar_url(params[:host_with_port])
   end
+
+  attribute :is_member, &:member?
 end

@@ -9,7 +9,7 @@ class Profile < ApplicationRecord
 
   validates :gender, inclusion: { in: GENDERS, if: :gender? }
 
-  delegate :email, to: :user
+  delegate :email, :member?, to: :user
 
   def avatar_url(host_with_port)
     if avatar.attached?

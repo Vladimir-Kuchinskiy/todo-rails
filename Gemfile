@@ -17,6 +17,7 @@ gem 'fast_jsonapi'
 gem 'jwt'
 gem 'rack-cors'
 gem 'mini_magick'
+gem 'braintree'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

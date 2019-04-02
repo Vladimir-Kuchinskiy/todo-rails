@@ -31,11 +31,19 @@ class Message
     end
 
     def expired_token
-      'Sorry, your token has expired. Please login to continue.'
+      'Sorry, your token has expired. Please login to continue'
     end
 
     def board_not_allowed
       'Sorry, you can not create/update/delete a board, because you are not a creator of a team'
+    end
+
+    def payment_error
+      'Sorry, there was some errors during payment'
+    end
+
+    def already_has_membership
+      'You are already a member'
     end
   end
 end

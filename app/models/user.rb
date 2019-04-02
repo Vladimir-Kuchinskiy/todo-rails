@@ -5,17 +5,18 @@ class User < ApplicationRecord
 
   after_create :create_profile
 
-  has_one :profile, dependent: :destroy
+  has_one :profile,       dependent: :destroy
+  has_one  :subscription, dependent: :destroy
 
   has_many :boards
-  has_many :user_teams, dependent: :destroy
-  has_many :teams, through: :user_teams
-  has_many :invitations, foreign_key: :creator_id
+  has_many :user_teams,           dependent: :destroy
+  has_many :teams,                through: :user_teams
+  has_many :invitations,          foreign_key: :creator_id
   has_many :received_invitations, foreign_key: :receiver_id, class_name: 'Invitation'
 
   validates :email, :password, presence: true
-  validates :email, uniqueness: true
-  validates :password, length: { minimum: 8 }
+  validates :email,            uniqueness: true
+  validates :password,         length: { minimum: 8 }
 
   def create_invitation(params)
     receiver = User.find_by!(email: params[:receiver_email])
@@ -29,6 +30,20 @@ class User < ApplicationRecord
 
   def create_team(team_params)
     TeamCreator.call(team_params, self)
+  end
+
+  def create_subscription
+    Subscription.create(user_id: id)
+  end
+
+  def expired_subscription?
+    subscription.present? && subscription.expired?
+  end
+
+  def member?
+    return subscription.destroy && false if expired_subscription?
+
+    subscription.present?
   end
 
   private

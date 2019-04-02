@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       end
       get '/invitations', to: 'invitations#index'
       resource :profile, only: %i[show update]
+      resources :subscriptions, only: %i[index new create]
     end
 
     post 'auth/login', to: 'authentication#create'
