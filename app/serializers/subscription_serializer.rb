@@ -4,7 +4,7 @@ class SubscriptionSerializer
   include FastJsonapi::ObjectSerializer
   set_key_transform :camel_lower
 
-  attribute :expires_at, &:expires_at_formated
+  attribute :expires_at, &:expires_at_formatted
 
   attribute :amount do
     Subscription::AMOUNT

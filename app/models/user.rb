@@ -3,6 +3,8 @@
 class User < ApplicationRecord
   has_secure_password
 
+  BOARDS_LIMIT = 5
+
   after_create :create_profile
 
   has_one :profile,       dependent: :destroy
@@ -36,19 +38,24 @@ class User < ApplicationRecord
     Subscription.create(user_id: id)
   end
 
-  def expired_subscription?
-    subscription.present? && subscription.expired?
-  end
-
   def member?
     return subscription.destroy && false if expired_subscription?
 
     subscription.present?
   end
 
+  def boards_limit_raised?(team_id = nil)
+    current_boards_count = team_id ? boards.of_team(team_id).count : boards.personal.count
+    current_boards_count >= BOARDS_LIMIT
+  end
+
   private
 
   def create_profile
     Profile.create(user_id: id)
+  end
+
+  def expired_subscription?
+    subscription.present? && subscription.expired?
   end
 end

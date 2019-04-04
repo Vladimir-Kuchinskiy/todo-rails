@@ -9,6 +9,7 @@ class Board < ApplicationRecord
   validates :title, presence: true
 
   scope :personal, -> { where(team_id: nil) }
+  scope :of_team, ->(team_id) { where(team_id: team_id) }
 
   def ordered_list_ids
     lists.ordered.ids.map(&:to_s)

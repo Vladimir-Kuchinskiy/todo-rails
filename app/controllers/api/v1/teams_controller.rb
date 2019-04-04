@@ -3,6 +3,7 @@
 module Api
   module V1
     class TeamsController < ApplicationController
+      before_action :check_member, only: :create
       before_action :set_team, only: %i[show update destroy]
 
       def index
@@ -40,6 +41,10 @@ module Api
 
       def team_params
         params.permit(:name)
+      end
+
+      def check_member
+        raise ExceptionHandler::NoMemberError, Message.no_member_board unless current_user.member?
       end
     end
   end

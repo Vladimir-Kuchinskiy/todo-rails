@@ -37,4 +37,30 @@ RSpec.describe Team, type: :model do
       end
     end
   end
+
+  describe 'creator?' do
+    let(:user) { create(:user) }
+    let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+
+    context 'when user is creator of the team' do
+      it 'returns true' do
+        create(:user_team, user_id: user.id, team_id: team.id, roles: ['creator'])
+        expect(team.creator?(user)).to eq true
+      end
+    end
+
+    context 'when user is not a creator of a team' do
+      context 'when user is a member of a team' do
+        it 'returns false' do
+          create(:user_team, user_id: user.id, team_id: team.id)
+          expect(team.creator?(user)).to eq false
+        end
+      end
+      context 'when user is not a member of a team at all' do
+        it 'ActiveRecord::RecordNotFound error' do
+          expect { team.creator?(user) }.to raise_error(ActiveRecord::RecordNotFound, /Couldn't find UserTeam/)
+        end
+      end
+    end
+  end
 end

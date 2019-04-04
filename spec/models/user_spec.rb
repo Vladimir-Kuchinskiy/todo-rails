@@ -35,4 +35,97 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#member?' do
+    let(:user) { create(:user) }
+
+    context 'when user is a member' do
+      let!(:subscription) { create(:subscription, user_id: user.id) }
+
+      context 'when subscription is expired' do
+        before { subscription.update(expires_at: Time.current - 1.hour) }
+
+        it 'destroys a subscription' do
+          expect { user.member? }.to change { Subscription.count }.by(-1)
+        end
+
+        it 'returns false' do
+          expect(user.member?).to eq false
+        end
+      end
+
+      context 'when subscription is not expired' do
+        it 'returns true' do
+          expect(user.member?).to eq true
+        end
+      end
+    end
+
+    context 'when user is not a member' do
+      it 'returns false' do
+        expect(user.member?).to eq false
+      end
+    end
+  end
+
+  describe '#boards_limit_raised?' do
+    let(:user) { create(:user) }
+
+    context 'for personal board' do
+      context "boards count is >= #{described_class::BOARDS_LIMIT}" do
+        it 'returns true' do
+          create_list(:board, described_class::BOARDS_LIMIT, user_id: user.id)
+          expect(user.boards_limit_raised?).to eq true
+        end
+      end
+
+      context "boards count is < #{described_class::BOARDS_LIMIT}" do
+        it 'returns false' do
+          expect(user.boards_limit_raised?).to eq false
+        end
+      end
+    end
+
+    context 'for team board' do
+      let(:team) { create(:user_team, user_id: user.id, team_id: create(:team).id, roles: ['creator']).team }
+
+      context "boards count is >= #{described_class::BOARDS_LIMIT}" do
+        it 'returns true' do
+          create_list(:board, described_class::BOARDS_LIMIT, user_id: user.id, team_id: team.id)
+          expect(user.boards_limit_raised?(team.id)).to eq true
+        end
+      end
+
+      context "boards count is < #{described_class::BOARDS_LIMIT}" do
+        it 'returns false' do
+          expect(user.boards_limit_raised?(team.id)).to eq false
+        end
+      end
+    end
+  end
+
+  describe '#invited?' do
+    let(:user) { create(:user) }
+    let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+
+    context 'when user is invited to amy team' do
+      it 'returns true' do
+        create(:invitation, receiver_id: user.id, creator_id: create(:user).id, team_id: team.id)
+        expect(user.invited?(team)).to eq true
+      end
+    end
+
+    context 'when user is not invited to any team' do
+      it 'returns false' do
+        expect(user.invited?(team)).to eq false
+      end
+    end
+  end
+
+  describe '#create_subscription' do
+    it 'creates subscription' do
+      user = create(:user)
+      expect { user.create_subscription }.to change { Subscription.count }.by(1)
+    end
+  end
 end

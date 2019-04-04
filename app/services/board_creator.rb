@@ -8,11 +8,11 @@ class BoardCreator
   def call
     if params[:team_id]
       validate!
-      board = current_user.boards.create!(params)
-      board.update(team_id: team.id)
-      board
+      check_rights
+      create_team_board
     else
-      current_user.boards.create!(params)
+      check_rights
+      create_personal_board
     end
   end
 
@@ -25,6 +25,16 @@ class BoardCreator
     @current_user = current_user
   end
 
+  def create_team_board
+    board = current_user.boards.create!(params)
+    board.update(team_id: team.id)
+    board
+  end
+
+  def create_personal_board
+    current_user.boards.create!(params)
+  end
+
   def validate!
     @team = Team.find_by!(id: params[:team_id])
     raise(ExceptionHandler::DeleteBoardAccessDenied, Message.board_not_allowed) unless creator?
@@ -32,5 +42,13 @@ class BoardCreator
 
   def creator?
     @team.creator?(current_user)
+  end
+
+  def check_rights
+    raise ExceptionHandler::NoMemberError, Message.not_member_board unless can_create_boards?
+  end
+
+  def can_create_boards?
+    current_user.member? || !current_user.boards_limit_raised?(params[:team_id])
   end
 end

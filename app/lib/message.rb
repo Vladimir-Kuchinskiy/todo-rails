@@ -45,5 +45,13 @@ class Message
     def already_has_membership
       'You are already a member'
     end
+
+    def not_member_board
+      "Sorry, but you need to become a member to create more then #{User::BOARDS_LIMIT} boards"
+    end
+
+    def no_member_board
+      'Sorry, but you need to become a member to create your own teams'
+    end
   end
 end

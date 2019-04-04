@@ -10,7 +10,7 @@ class Subscription < ApplicationRecord
     expires_at < Time.current
   end
 
-  def expires_at_formated
+  def expires_at_formatted
     expires_at.strftime('%d/%m/%Y')
   end
 

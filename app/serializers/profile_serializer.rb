@@ -12,4 +12,8 @@ class ProfileSerializer
   end
 
   attribute :is_member, &:member?
+
+  attribute :boards_limit do
+    User::BOARDS_LIMIT
+  end
 end

@@ -53,31 +53,43 @@ RSpec.describe 'Teams API', type: :request do
   end
 
   describe 'POST /api/teams' do
-    context 'when the request is valid' do
-      before do
-        valid_attributes = { name: 'The best team one' }.to_json
-        post '/api/teams', params: valid_attributes, headers: headers
+    let(:valid_attributes) { { name: 'The best team one' }.to_json }
+    context 'when has membership' do
+      before { create(:subscription, user_id: user.id) }
+
+      context 'when the request is valid' do
+        before { post '/api/teams', params: valid_attributes, headers: headers }
+
+        it 'creates a team' do
+          expect(json['data']['attributes']['name']).to eq('The best team one')
+        end
+
+        it 'returns status code 201' do
+          expect(response).to have_http_status(201)
+        end
       end
 
-      it 'creates a team' do
-        expect(json['data']['attributes']['name']).to eq('The best team one')
-      end
+      context 'when the request is invalid' do
+        before { post '/api/teams', headers: headers }
 
-      it 'returns status code 201' do
-        expect(response).to have_http_status(201)
+        it 'returns status code 422' do
+          expect(response).to have_http_status(422)
+        end
+
+        it 'returns a validation failure message' do
+          expect(response.body)
+            .to match(/Validation failed: Name can't be blank/)
+        end
       end
     end
 
-    context 'when the request is invalid' do
-      before { post '/api/teams', headers: headers }
+    context 'when has no membership' do
+      context 'when the request is valid' do
+        before { post '/api/teams', params: valid_attributes, headers: headers }
 
-      it 'returns status code 422' do
-        expect(response).to have_http_status(422)
-      end
-
-      it 'returns a validation failure message' do
-        expect(response.body)
-          .to match(/Validation failed: Name can't be blank/)
+        it 'returns status code 201' do
+          expect(response).to have_http_status(403)
+        end
       end
     end
   end
