@@ -7,8 +7,9 @@ class User < ApplicationRecord
 
   after_create :create_profile
 
-  has_one :profile,       dependent: :destroy
-  has_one  :subscription, dependent: :destroy
+  has_one :profile,           dependent: :destroy
+  has_one :braintree_payment, dependent: :destroy
+  has_one :subscription,      dependent: :destroy
 
   has_many :boards
   has_many :user_teams,           dependent: :destroy
@@ -19,6 +20,8 @@ class User < ApplicationRecord
   validates :email, :password, presence: true
   validates :email,            uniqueness: true
   validates :password,         length: { minimum: 8 }
+
+  delegate :first_name, :last_name, to: :profile
 
   def create_invitation(params)
     receiver = User.find_by!(email: params[:receiver_email])
@@ -34,19 +37,22 @@ class User < ApplicationRecord
     TeamCreator.call(team_params, self)
   end
 
-  def create_subscription
-    Subscription.create(user_id: id)
+  def create_subscription(braintree_id)
+    subscription&.dastroy
+    Subscription.create(user_id: id, braintree_id: braintree_id)
   end
 
   def member?
-    return subscription.destroy && false if expired_subscription?
-
-    subscription.present?
+    subscription.present? && (valid_subscription? || (subscription.destroy && false))
   end
 
   def boards_limit_raised?(team_id = nil)
     current_boards_count = team_id ? boards.of_team(team_id).count : boards.personal.count
     current_boards_count >= BOARDS_LIMIT
+  end
+
+  def payment_info?
+    BraintreePayment.find_by(user_id: id)
   end
 
   private
@@ -55,7 +61,7 @@ class User < ApplicationRecord
     Profile.create(user_id: id)
   end
 
-  def expired_subscription?
-    subscription.present? && subscription.expired?
+  def valid_subscription?
+    (subscription.canceled? && !subscription.expired?) || subscription.active?
   end
 end

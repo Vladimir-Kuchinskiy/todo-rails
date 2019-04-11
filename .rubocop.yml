@@ -2,6 +2,8 @@ AllCops:
   Exclude:
     - "bin/*"
     - "node_modules/**/**"
+    - "db/schema.rb"
+    - "db/migrate/*.rb"
 Documentation:
   Enabled: false
 Metrics/LineLength:
@@ -9,7 +11,6 @@ Metrics/LineLength:
 Metrics/BlockLength:
   Exclude:
     - "Rakefile"
-    - "db/schema.rb"
     - "**/*.rake"
     - "spec/**/*.rb"
 # RSpec/NestedGroups:

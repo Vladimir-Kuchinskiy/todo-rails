@@ -145,7 +145,9 @@ RSpec.describe 'Boards API', type: :request do
       context 'when not a creator of a team' do
         context 'when the request is valid' do
           let!(:user) { create(:user_team, team_id: team.id, user_id: create(:user).id).user }
-          let(:team) { create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team }
+          let(:team) do
+            create(:user_team, user_id: create(:user).id, team_id: create(:team).id, roles: ['creator']).team
+          end
 
           it 'returns status code 403' do
             post "/api/teams/#{team.id}/boards", params: valid_attributes, headers: headers

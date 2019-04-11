@@ -8,7 +8,7 @@ module Api
 
       # GET /boards
       def index
-        json_response(BoardSerializer.new(current_user.boards.personal))
+        json_response(BoardSerializer.new(current_user.boards.personal.includes(:lists)))
       end
 
       # POST /boards

@@ -4,6 +4,8 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
   it { is_expected.to have_one(:profile).dependent(:destroy) }
+  it { is_expected.to have_one(:subscription).dependent(:destroy) }
+  it { is_expected.to have_one(:braintree_payment).dependent(:destroy) }
 
   it { is_expected.to have_many(:boards) }
   it { is_expected.to have_many(:user_teams).dependent(:destroy) }
@@ -43,7 +45,7 @@ RSpec.describe User, type: :model do
       let!(:subscription) { create(:subscription, user_id: user.id) }
 
       context 'when subscription is expired' do
-        before { subscription.update(expires_at: Time.current - 1.hour) }
+        before { subscription.update(expires_at: Time.current - 1.hour, status: Subscription::STATUSES[:canceled]) }
 
         it 'destroys a subscription' do
           expect { user.member? }.to change { Subscription.count }.by(-1)
@@ -125,7 +127,7 @@ RSpec.describe User, type: :model do
   describe '#create_subscription' do
     it 'creates subscription' do
       user = create(:user)
-      expect { user.create_subscription }.to change { Subscription.count }.by(1)
+      expect { user.create_subscription('fake_id') }.to change { Subscription.count }.by(1)
     end
   end
 end

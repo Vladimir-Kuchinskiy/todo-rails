@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_01_124532) do
+ActiveRecord::Schema.define(version: 2019_04_11_083959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,6 +44,15 @@ ActiveRecord::Schema.define(version: 2019_04_01_124532) do
     t.bigint "team_id"
     t.index ["team_id"], name: "index_boards_on_team_id"
     t.index ["user_id"], name: "index_boards_on_user_id"
+  end
+
+  create_table "braintree_payments", force: :cascade do |t|
+    t.string "customer_id"
+    t.string "payment_method_token"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_braintree_payments_on_user_id"
   end
 
   create_table "cards", force: :cascade do |t|
@@ -93,6 +102,8 @@ ActiveRecord::Schema.define(version: 2019_04_01_124532) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "braintree_id"
+    t.string "status"
     t.index ["user_id"], name: "index_subscriptions_on_user_id"
   end
 

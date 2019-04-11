@@ -11,7 +11,9 @@ RSpec.describe 'Invitations API', type: :request do
 
   describe 'GET /api/invitations' do
     let(:creator) { create(:user) }
-    let(:teams) { create_list(:user_team, 10, user_id: creator.id, team: create(:team), roles: ['creator']).map(&:team) }
+    let(:teams) do
+      create_list(:user_team, 10, user_id: creator.id, team: create(:team), roles: ['creator']).map(&:team)
+    end
     let!(:invitations) do
       teams.map { |team| team.invitations.create(creator_id: creator.id, receiver_id: user.id) }
     end
