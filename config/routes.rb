@@ -10,6 +10,7 @@ Rails.application.routes.draw do
           end
           resource :move, only: :create
         end
+        resources :assignments, shallow: true, only: %i[create destroy]
       end
       resources :teams do
         resources :boards, only: %i[show create update destroy]

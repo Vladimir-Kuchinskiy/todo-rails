@@ -37,7 +37,7 @@ class BoardCreator
 
   def validate!
     @team = Team.find_by!(id: params[:team_id])
-    raise(ExceptionHandler::DeleteBoardAccessDenied, Message.board_not_allowed) unless creator?
+    raise(ExceptionHandler::BoardAccessDenied, Message.board_not_allowed) unless creator?
   end
 
   def creator?

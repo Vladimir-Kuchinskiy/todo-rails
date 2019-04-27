@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class BoardOwnerValidator
-  def self.validate_and_return_board!(params, current_user)
-    new(params, current_user).validate!
+  def self.validate_and_return_board!(team, board, current_user)
+    new(team, board, current_user).validate!
   end
 
   def validate!
-    raise(ExceptionHandler::DeleteBoardAccessDenied, Message.board_not_allowed) unless creator?
+    raise(ExceptionHandler::BoardAccessDenied, Message.board_not_allowed) unless creator?
 
     board
   end
@@ -15,9 +15,9 @@ class BoardOwnerValidator
 
   attr_reader :board, :current_user, :team
 
-  def initialize(params, current_user)
-    @team = Team.find_by!(id: params[:team_id])
-    @board = @team.boards.find_by!(id: params[:id])
+  def initialize(team, board, current_user)
+    @team = team
+    @board = board
     @current_user = current_user
   end
 

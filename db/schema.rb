@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_11_083959) do
+ActiveRecord::Schema.define(version: 2019_04_24_073608) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,15 @@ ActiveRecord::Schema.define(version: 2019_04_11_083959) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "user_cards", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "card_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["card_id"], name: "index_user_cards_on_card_id"
+    t.index ["user_id"], name: "index_user_cards_on_user_id"
+  end
+
   create_table "user_teams", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "team_id"
@@ -138,6 +147,8 @@ ActiveRecord::Schema.define(version: 2019_04_11_083959) do
   add_foreign_key "lists", "boards"
   add_foreign_key "profiles", "users"
   add_foreign_key "subscriptions", "users"
+  add_foreign_key "user_cards", "cards"
+  add_foreign_key "user_cards", "users"
   add_foreign_key "user_teams", "teams"
   add_foreign_key "user_teams", "users"
 end

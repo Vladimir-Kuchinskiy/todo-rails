@@ -1,0 +1,9 @@
+<h3>
+  Hey, You've been assigned to a card <%= @user_card.card.content %> by <%=
+  @assigner.email %>
+</h3>
+<h4>
+  You can go to <%= link_to "#{@user_card.card.board.title} board",
+  "localhost:3001/teams/#{@user_card.card.board.team_id}/boards/#{@user_card.card.board.id}"
+  %>
+</h4>

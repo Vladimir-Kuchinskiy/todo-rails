@@ -20,6 +20,14 @@ class Team < ApplicationRecord
     user_teams.find_by!(user_id: user.id).roles.include?('creator')
   end
 
+  def member?(user)
+    raise(ExceptionHandler::BoardAccessDenied, Message.user_is_not_team_member) if user_teams
+                                                                                   .find_by(user_id: user.id)
+                                                                                   .blank?
+
+    true
+  end
+
   def creator
     user_teams.find_by(roles: ['creator']).user
   end

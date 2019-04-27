@@ -53,5 +53,13 @@ class Message
     def no_member_board
       'Sorry, but you need to become a member to create your own teams'
     end
+
+    def not_a_board_member
+      'Not a board member'
+    end
+
+    def user_is_not_team_member
+      'Assign user is not a team member'
+    end
   end
 end

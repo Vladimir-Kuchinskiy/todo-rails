@@ -37,6 +37,10 @@ class User < ApplicationRecord
     TeamCreator.call(team_params, self)
   end
 
+  def member_data(host_with_port)
+    { email: email, avatarUrl: profile.avatar_url(host_with_port) }
+  end
+
   def create_subscription(braintree_id)
     subscription&.dastroy
     Subscription.create(user_id: id, braintree_id: braintree_id)

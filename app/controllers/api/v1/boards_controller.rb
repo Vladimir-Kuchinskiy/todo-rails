@@ -21,8 +21,8 @@ module Api
       def show
         json_response(BoardSerializer.new(
                         @board,
-                        include: %i[lists lists.cards],
-                        params: { current_user_id: current_user.id }
+                        include: %i[lists lists.cards lists.cards.user_cards],
+                        params: { current_user_id: current_user.id, host_with_port: request.host_with_port }
                       ))
       end
 
@@ -54,10 +54,16 @@ module Api
 
       def verify_owner_and_set_board
         @board = if params[:team_id]
-                   BoardOwnerValidator.validate_and_return_board!(params, current_user)
+                   verify_for_team
                  else
                    current_user.boards.find(params[:id])
                  end
+      end
+
+      def verify_for_team
+        team = Team.find_by!(id: params[:team_id])
+        boards = team.boards.find_by!(id: params[:id])
+        BoardOwnerValidator.validate_and_return_board!(team, boards, current_user)
       end
     end
   end

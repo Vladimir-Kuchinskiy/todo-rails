@@ -44,7 +44,7 @@ RSpec.describe BoardCreator do
 
           it 'creates new board for user' do
             expect { described_class.call(valid_params, member) }
-              .to raise_error(ExceptionHandler::DeleteBoardAccessDenied, %r{Sorry, you can not create/update/delete})
+              .to raise_error(ExceptionHandler::BoardAccessDenied, %r{Sorry, you can not create/update/delete})
           end
         end
       end
