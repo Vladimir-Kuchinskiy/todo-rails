@@ -5,6 +5,7 @@ module Api
     class BoardsController < ApplicationController
       before_action :set_board, only: :show
       before_action :verify_owner_and_set_board, only: %i[update destroy]
+      after_action  :broadcast_board, only: :update
 
       # GET /boards
       def index
@@ -29,6 +30,8 @@ module Api
       # PUT /boards/:id
       def update
         @board.update(board_params)
+        @data = BoardSerializer.new(@board)
+        @type = :update_board
         head :no_content
       end
 

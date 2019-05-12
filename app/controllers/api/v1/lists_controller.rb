@@ -5,6 +5,7 @@ module Api
     class ListsController < ApplicationController
       before_action :set_board, only: %i[index create]
       before_action :set_list, only: %i[show update destroy]
+      after_action  :broadcast_board, only: %i[create update destroy]
 
       # GET /api/v1/boards/:board_id/lists
       def index
@@ -19,22 +20,28 @@ module Api
       # POST /api/v1/boards/:board_id/lists
       def create
         list = @board.lists.create!(list_params)
-        json_response(ListSerializer.new(list), :created)
+        @data = ListSerializer.new(list)
+        @type = :create_list
+        json_response(@data, :created)
       end
 
       # PUT /api/v1/lists/:id
       def update
         @list.update(list_params)
+        @board = @list.board
+        @data = ListSerializer.new(@list)
+        @type = :update_list
         head :no_content
       end
 
       # DELETE /api/v1/lists/:id
       def destroy
         @list.destroy
+        @board = @list.board
+        @data = ListSerializer.new(@list)
+        @type = :delete_list
         head :no_content
       end
-
-      private
 
       def list_params
         params.permit(:title)

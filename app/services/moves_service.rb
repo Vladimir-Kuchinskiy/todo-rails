@@ -7,6 +7,7 @@ class MovesService
 
   def call
     move_resource
+    params[:list_id] ? resource : resource.list
   end
 
   def self.call(params)

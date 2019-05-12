@@ -48,8 +48,8 @@ RSpec.describe MovesService do
             expect { described_class.call(valid_params) }.to change { list.reload.position }.to(to_position)
           end
 
-          it 'returns true' do
-            expect(described_class.call(valid_params)).to eq true
+          it 'returns list' do
+            expect(described_class.call(valid_params)).to eq list
           end
         end
 
@@ -60,8 +60,8 @@ RSpec.describe MovesService do
             expect { described_class.call(valid_params) }.to change { list.reload.position }.to(to_position)
           end
 
-          it 'returns true' do
-            expect(described_class.call(valid_params)).to eq true
+          it 'returns list' do
+            expect(described_class.call(valid_params)).to eq list
           end
         end
 
@@ -70,8 +70,8 @@ RSpec.describe MovesService do
             expect { described_class.call(valid_params) }.not_to change { list.reload.position }.from(list.position)
           end
 
-          it 'returns true' do
-            expect(described_class.call(valid_params)).to eq nil
+          it 'returns list' do
+            expect(described_class.call(valid_params)).to eq list
           end
         end
       end

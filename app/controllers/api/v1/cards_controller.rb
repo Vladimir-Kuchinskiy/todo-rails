@@ -5,6 +5,7 @@ module Api
     class CardsController < ApplicationController
       before_action :set_list, only: %i[index create]
       before_action :set_card, only: %i[show update destroy]
+      after_action  :broadcast_list, only: %i[create update destroy]
 
       # GET /api/v1/cards/:id
       def show
@@ -14,18 +15,26 @@ module Api
       # POST /api/v1/lists/:list_id/cards
       def create
         card = @list.cards.create!(card_params)
-        json_response(CardSerializer.new(card), :created)
+        @data = CardSerializer.new(card)
+        @type = :create_card
+        json_response(@data, :created)
       end
 
       # PUT /api/v1/cards/:id
       def update
         @card.update(card_params)
+        @list = @card.list
+        @data = CardSerializer.new(@card)
+        @type = :update_card
         head :no_content
       end
 
       # DELETE /api/v1/cards/:id
       def destroy
         @card.destroy
+        @list = @card.list
+        @data = CardSerializer.new(@card)
+        @type = :delete_card
         head :no_content
       end
 
