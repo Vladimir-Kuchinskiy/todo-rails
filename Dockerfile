@@ -1,4 +1,4 @@
-FROM ruby:alpine
+FROM ruby:2.6.1-alpine3.9
 
 RUN apk update \
   && apk add --virtual build-dependencies \
