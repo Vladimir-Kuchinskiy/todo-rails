@@ -9,7 +9,7 @@ module Api
 
       def create
         invitation = current_user.create_invitation(params)
-        InvitationMailer.with(invitation: invitation).send_invitation.deliver_now
+        InvitationMailer.with(invitation: invitation).send_invitation.deliver_later
         head :created
       end
 

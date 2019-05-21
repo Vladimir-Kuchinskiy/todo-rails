@@ -15,4 +15,5 @@ RUN gem install rails
 WORKDIR /app
 COPY Gemfile* ./
 RUN bundle install
-COPY . ./app/
+COPY . .
+CMD ["rails", "s"]

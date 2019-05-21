@@ -18,6 +18,8 @@ gem 'fast_jsonapi'
 gem 'jwt'
 gem 'mini_magick'
 gem 'rack-cors'
+gem 'redis-namespace'
+gem 'sidekiq'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]

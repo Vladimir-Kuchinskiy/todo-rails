@@ -36,12 +36,6 @@ RSpec.describe 'Invitations API', type: :request do
     context 'when request attributes are valid' do
       let(:valid_attributes) { { receiver_email: receiver.email }.to_json }
 
-      it 'sends 1 email' do
-        expect do
-          post "/api/teams/#{team_id}/invitations", params: valid_attributes, headers: headers
-        end.to change { ActionMailer::Base.deliveries.count }.by(1)
-      end
-
       it 'returns status code 201' do
         post "/api/teams/#{team_id}/invitations", params: valid_attributes, headers: headers
         expect(response).to have_http_status(201)

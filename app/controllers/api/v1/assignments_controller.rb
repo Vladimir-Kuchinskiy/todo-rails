@@ -32,13 +32,17 @@ module Api
       def notify_assignment
         return unless @card.board.team_id
 
-        UserAssignmentMailer.with(assigner: current_user, user_card: @user_card).notify_assignment.deliver_now
+        UserAssignmentMailer.with(assigner: current_user, user_card: @user_card).notify_assignment.deliver_later
       end
 
       def notify_unassignment
         return unless @card.board.team_id
 
-        UserAssignmentMailer.with(unassigner: current_user, user_card: @user_card).notify_unassignment.deliver_now
+        UserAssignmentMailer.with(
+          unassigner: current_user,
+          user: @user_card.user,
+          card: @user_card.card
+        ).notify_unassignment.deliver_later
       end
 
       def set_card
